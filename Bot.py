@@ -12,7 +12,7 @@ WEATHER_TOKEN = os.getenv("WEATHER_TOKEN")
 
 
 def get_weather():
-    city_weather = input('Введите город для получания прогноза')
+    city_weather = input('Введите город для получания прогноза ')
     url = 'https://api.openweathermap.org/data/2.5/weather'
     params = {
         'q': city_weather,
@@ -23,4 +23,18 @@ def get_weather():
     return response
 
 
-get_weather()
+def main():
+    while True:
+        try:
+            get_weather()
+            time.sleep(60*15)
+        except Exception as e:
+            print(f'Бот упал с ошибкой {e}')
+            time.sleep(15)
+            continue
+
+
+# get_weather()
+
+if __name__ == '__main__':
+    main()
