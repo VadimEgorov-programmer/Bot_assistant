@@ -23,6 +23,7 @@ def start_message(message):
 @bot.message_handler(content_types=["text"])
 def get_weather(message):
     try:
+        # Getting data via the API.
         url = 'https://api.openweathermap.org/data/2.5/weather'
         params = {
             'appid': WEATHER_TOKEN,
@@ -32,13 +33,34 @@ def get_weather(message):
         }
         response = requests.get(url, params=params)
         data = response.json()
-        temp = (data['main']['temp'])
-        conditions = (data['weather'][0]['description'])
-        weather_message = f'В {message.text} сейчас {temp}, {conditions}'
-        bot.send_message(message.chat.id, weather_message)
+        # Process data.
+        get_weather_information(data, message)
+
     except:
-        bot.send_message(message.chat.id, f'{message.text} не желает контактировать с вами.'
-                                          f' Возможно вы где-то ошиблись = (')
+        get_weather_except_message(message)
+
+
+def get_weather_information(data, message):
+    """
+    Information to output to the request.
+    :param data:
+    :param message:
+    :return:
+    """
+    temp = (data['main']['temp'])
+    conditions = (data['weather'][0]['description'])
+    weather_message = f'{message.text}: сейчас {temp}, {conditions}'
+    bot.send_message(message.chat.id, weather_message)
+
+
+def get_weather_except_message(message):
+    """
+    Error when entering the city incorrectly.
+    :param message:
+    :return:
+    """
+    bot.send_message(message.chat.id, f'{message.text} не желает контактировать с вами.'
+                                      f' Возможно вы где-то ошиблись = (')
 
 
 bot.polling(none_stop=True)
