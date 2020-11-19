@@ -35,7 +35,6 @@ def get_weather(message):
         data = response.json()
         # Process data.
         get_weather_information(data, message)
-
     except:
         get_weather_except_message(message)
 
