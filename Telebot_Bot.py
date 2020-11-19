@@ -1,19 +1,5 @@
-'''import telebot
-
-bot = telebot.TeleBot('1257430502:AAHbA1YG_HkePQnHltxd2H-osLCSL6Sdv2c')
-
-
-@bot.message_handler(commands=['start'])
-def start_message(message):
-    bot.send_message(message.chat.id, 'Привет, ты написал мне /start')
-
-
-bot.polling()
-'''
-
 import telebot
 import requests
-from pprint import pprint
 import os
 from dotenv import load_dotenv
 
@@ -26,9 +12,6 @@ bot = telebot.TeleBot(token=TELEGRAM_TOKEN)
 keyboard1 = telebot.types.ReplyKeyboardMarkup(True, True)
 keyboard1.row('Какая погода за вашим окном?')
 
-
-# keyboard1.row('Давай знакомиться я ...')
-# keyboard1.row('Какая погода за вашим окном?')
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
@@ -52,11 +35,7 @@ def get_weather(message):
         temp = (data['main']['temp'])
         conditions = (data['weather'][0]['description'])
         weather_message = f'В {message.text} сейчас {temp}, {conditions}'
-        print(message)
-        pprint(message)
-        # pprint(response)
         bot.send_message(message.chat.id, weather_message)
-        # return response
     except:
         bot.send_message(message.chat.id, f'{message.text} не желает контактировать с вами.'
                                           f' Возможно вы где-то ошиблись = (')
