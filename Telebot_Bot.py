@@ -2,6 +2,7 @@ import telebot
 import requests
 import os
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 
@@ -13,10 +14,20 @@ keyboard1 = telebot.types.ReplyKeyboardMarkup(True, True)
 keyboard1.row('Какая погода за вашим окном?')
 
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['help', 'Help'])
+def help_text(message):
+    user_help_text = '\n{0.first_name}, что такое области не знаю, соотвественно названия городов и сёл могу путать.' \
+                     '\n\n\tДля получения информации просто напишите интересующий вас город.' \
+                     '\n К примеру: Москва' \
+                     '\n На текущий момент знаю команды:' \
+                     '\n /start, /help'.format(message.from_user)
+    bot.send_message(message.chat.id, user_help_text)
+
+
+@bot.message_handler(commands=['start', 'Start', 'старт', 'Старт'])
 def start_message(message):
-    text_start_message = 'Привет {0.first_name}!, я {1.first_name}! Умею показывать погоду в одном' \
-                         ' из существующих городов. В областях не ориентируюсь.'.format(message.from_user, bot.get_me())
+    text_start_message = 'Привет {0.first_name}!, я {1.first_name}!\n Умею показывать погоду в одном' \
+                         ' из существующих городов.'.format(message.from_user, bot.get_me())
     bot.send_message(message.chat.id, text_start_message, reply_markup=keyboard1)
 
 
