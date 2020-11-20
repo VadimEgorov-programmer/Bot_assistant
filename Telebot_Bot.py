@@ -3,6 +3,7 @@ import requests
 import os
 from dotenv import load_dotenv
 import time
+import datetime
 
 load_dotenv()
 
@@ -14,7 +15,7 @@ keyboard1 = telebot.types.ReplyKeyboardMarkup(True, True)
 keyboard1.row('Какая погода за вашим окном?')
 
 
-@bot.message_handler(commands=['help', 'Help'])
+@bot.message_handler(commands=['help', 'Help', 'Помощь', 'помощь'])
 def help_text(message):
     user_help_text = '\n{0.first_name}, что такое области не знаю, соотвественно названия городов и сёл могу путать.' \
                      '\n\n\tДля получения информации просто напишите интересующий вас город.' \
@@ -27,7 +28,7 @@ def help_text(message):
 @bot.message_handler(commands=['start', 'Start', 'старт', 'Старт'])
 def start_message(message):
     text_start_message = 'Привет {0.first_name}!, я {1.first_name}!\n Умею показывать погоду в одном' \
-                         ' из существующих городов.'.format(message.from_user, bot.get_me())
+                         ' из существующих городов.\nПодробнее: /Помощь или /help'.format(message.from_user, bot.get_me())
     bot.send_message(message.chat.id, text_start_message, reply_markup=keyboard1)
 
 
@@ -59,7 +60,11 @@ def get_weather_information(data, message):
     """
     temp = (data['main']['temp'])
     conditions = (data['weather'][0]['description'])
-    weather_message = f'{message.text}: сейчас {temp}, {conditions}'
+    timestamp = (data['dt'])
+    datetime_city = datetime.datetime.fromtimestamp(timestamp)
+    dt_value_city = datetime_city.strftime('%Y-%m-%d %H:%M:%S')
+    weather_message = f'{message.text}: сейчас {temp}, {conditions}.' \
+                      f'\nВремя в вашем городе\n{dt_value_city}'
     bot.send_message(message.chat.id, weather_message)
 
 
